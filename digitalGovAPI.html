@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Digital Gov API Example</title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+</head>
+<body>
+<h2>Search Results</h2>
+<div id="paging"></div>
+<div id="results"></div>
+<script languge="text/javascript">
+$(document).ready(function() {
+/* search url using callback; MUST contain the ..."?callback=?" */
+//    var digitalgovAPI = "http://search.usa.gov/api/search.json?callback=?"; // live API url
+    var digitalgovAPI = "test_data.json"; // REMOVE when using live
+
+/*	add start page number here, need to pick up from query aspx 
+The API instructions provide examples of other parameters; index, format, etc... see https://search.usa.gov/.../.../api_instructions */
+
+// UNCOMMENT for live json API, uses JQuery getJSON - api.jquery.com/jquery.getjson
+//    $.getJSON( digitalgovAPI, {
+//        affiliate: "YOUR_AFFILIATE",
+//        index: "web",
+//        format: "json",
+//        hl: "false",
+//        startrecord: "0",
+//       query: "SEARCH_FORM_QUERY_REQUEST" /* REMOVE: you must remove any URL encoding before inserting the string here */
+//    })
+
+    $.getJSON( digitalgovAPI ) // REMOVE: after switch to live API
+
+    .done(function( data ) {
+		searchListing(data);
+        pageControl(data.total);
+    })
+    .fail(function( data, status, xhr ) { /* In case we fail for some reason */
+        if (status == "error") {
+    var err = status + ", " + xhr;
+       /* console.log( "Request Failed: "); */
+        $("<p class=\"errorResults\">").html(err+", Sorry, could not retrieve search listings. Please try again later.</p>").appendTo("#results");
+        }
+        else if (status == "timeout") {
+            var err = status + ", " + xhr;
+       /* console.log( "Request Failed: "); */
+        $("<p class=\"errorResults\">").html(err+", Sorry, could not retrieve search listings. Please try again later.</p>").appendTo("#results");
+        }
+    });
+});
+
+/* Results are displayed similar to other popular search engine listings, linked wrapped title, unlinked URL, Snip of page content where keyword was found. */
+function searchListing( data ) {
+    var wrapper = document.getElementById("results");
+
+    $.each( data.results, function( i, item ) {
+    	//var searchItem = item[i];
+    	var container = document.createElement("div");
+    	var title = document.createElement("p");
+    	var titleLink = document.createElement("a");
+    	var url = document.createElement("span");
+    	var desc = document.createElement("span");
+    	var titleTxt = item.title;
+    	var titleDesc = item.content;
+
+    	container.id = "result-"+i; /* incase you want to do some highlighting */
+    	container.className = "searchResult";
+    	title.className = "searchTitle";
+    	titleLink.href = item.unescapedUrl;
+    	titleLink.appendChild(document.createTextNode(titleTxt));
+    	title.appendChild(titleLink);
+    	url.appendChild(document.createTextNode(item.unescapedUrl));
+    	desc.appendChild(document.createTextNode(item.content));
+
+    	container.appendChild(title);
+    	container.appendChild(url);
+    	container.appendChild(desc);
+    	wrapper.appendChild(container);
+	});
+}
+
+/*
+  A better implementation would be to store the query results in an array so that we dont hit the search API each time we page. All the results could be stored in the array object.
+*/
+function pageControl( pages ) {
+    var searchPages = document.getElementById("paging");
+    var totalPages = 0;
+    var searchUrl = "search.aspx?query=";
+
+    var pg = 1; // displayed page number
+    var pageIndex = 0; // or startrecord parameter
+
+    /* if less than 10 does not show paging control */
+    if (pages > 10) {
+    		/* always have the first page starting at 0, startrecord index is 0, so first page is 0-9, second page is 10-19, etc 
+                if your not sure how the JSON result set then use firebug to view the JSON data set. */
+        	$("#paging").append($("<a>",{"href":searchUrl+"ORIGINAL_QUERY&page=0", "class":"pageLink", "html":"1"}));
+            pageIndex = pg * 10; /* display results 10 at a time, next set is * 10 */
+            pg = pg + 1; /* increment the displayed page number */
+        do {
+        	$("#paging").append($("<a>",{"href":searchUrl+"ORIGINAL_QUERY&page="+pageIndex, "class":"pageLink", "html":pg}));
+            pageIndex = pg * 10; /* display results 10 at a time, next set is * 10 */
+            pg++; /* increment the displayed page number */
+            pages = pages - 10; /* count down 10 at a time from the original total query results */
+        }
+        while (pages > 10) /* stop if we are less than 10 */
+    }
+}
+</script>
+</body>
+</html>

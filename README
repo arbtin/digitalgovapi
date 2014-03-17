@@ -1,0 +1,21 @@
+README
+
+Contained herein are sources showing how to utililze Digital Gov Search API.
+
+https://search.usa.gov
+
+Why use this API? Because you can show custom search listing inside your site making it appear as if you have a full search feature on your site. Digital Gov Search provides search analytics to help you re-tune your content for your users.
+
+You will need to create a valid account before you can use your own affiliate account. Included is a .JSON data source for testing your implementation.
+
+The example uses JQuery and javascript to retrieve the JSON search API output.
+
+
+File List:
+README; your here.
+digitalGovAPI.html; html file containing the main script body with three functions. GET the json data, display the json data, and create a page index for the json search listings.
+test_data.json; for testing your script so as to not ping the live search API until your ready. Highlighting is turned off.
+
+
+Curt Arbtin
+arbtin@gmail.com
