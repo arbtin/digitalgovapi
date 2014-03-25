@@ -24,7 +24,7 @@ The API instructions provide examples of other parameters; index, format, etc...
 //        index: "web",
 //        format: "json",
 //        hl: "false",
-//        startrecord: "0",
+//        page: 1,
 //       query: "SEARCH_FORM_QUERY_REQUEST" /* REMOVE: you must remove any URL encoding before inserting the string here */
 //    })
 
@@ -83,7 +83,6 @@ function searchListing( data ) {
 */
 function pageControl( pages ) {
     var searchPages = document.getElementById("paging");
-    var totalPages = 0;
     var searchUrl = "search.aspx?query=";
 
     var pg = 1; // displayed page number
@@ -93,12 +92,10 @@ function pageControl( pages ) {
     if (pages > 10) {
     		/* always have the first page starting at 0, startrecord index is 0, so first page is 0-9, second page is 10-19, etc 
                 if your not sure how the JSON result set then use firebug to view the JSON data set. */
-        	$("#paging").append($("<a>",{"href":searchUrl+"ORIGINAL_QUERY&page=0", "class":"pageLink", "html":"1"}));
-            pageIndex = pg * 10; /* display results 10 at a time, next set is * 10 */
+        	$("#paging").append($("<a>",{"href":searchUrl+"ORIGINAL_QUERY&page=1", "class":"pageLink", "html":"1"}));
             pg = pg + 1; /* increment the displayed page number */
         do {
-        	$("#paging").append($("<a>",{"href":searchUrl+"ORIGINAL_QUERY&page="+pageIndex, "class":"pageLink", "html":pg}));
-            pageIndex = pg * 10; /* display results 10 at a time, next set is * 10 */
+        	$("#paging").append($("<a>",{"href":searchUrl+"ORIGINAL_QUERY&page="+pg, "class":"pageLink", "html":pg}));
             pg++; /* increment the displayed page number */
             pages = pages - 10; /* count down 10 at a time from the original total query results */
         }
