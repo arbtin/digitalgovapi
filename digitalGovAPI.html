@@ -85,12 +85,11 @@ function pageControl( pages ) {
     var searchPages = document.getElementById("paging");
     var searchUrl = "search.aspx?query=";
 
-    var pg = 1; // displayed page number
-    var pageIndex = 0; // or startrecord parameter
+    var pg = 1; // displayed page number and page parameter link index
 
     /* if less than 10 does not show paging control */
     if (pages > 10) {
-    		/* always have the first page starting at 0, startrecord index is 0, so first page is 0-9, second page is 10-19, etc 
+    		/* always have the first page starting at 1, startrecord index is 0, so first page is 0-9, second page is 10-19, etc 
                 if your not sure how the JSON result set then use firebug to view the JSON data set. */
         	$("#paging").append($("<a>",{"href":searchUrl+"ORIGINAL_QUERY&page=1", "class":"pageLink", "html":"1"}));
             pg = pg + 1; /* increment the displayed page number */
