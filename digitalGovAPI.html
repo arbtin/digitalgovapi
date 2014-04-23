@@ -31,8 +31,13 @@ The API instructions provide examples of other parameters; index, format, etc...
     $.getJSON( digitalgovAPI ) // REMOVE: after switch to live API
 
     .done(function( data ) {
-		searchListing(data);
-        pageControl(data.total);
+	if (data.total > 0) {
+	  searchListing(data);
+          pageControl(data.total);
+	}
+	else if {
+          $("<p class=\"errorResults\">Sorry, your search term returned no results. Please try a different search term.</p>").appendTo("#results");
+	}
     })
     .fail(function( data, status, xhr ) { /* In case we fail for some reason */
         if (status == "error") {
